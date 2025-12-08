@@ -20,7 +20,7 @@ document.getElementById("sendOtpForm").addEventListener("submit", async function
         return;
     }
 
-    const res = await fetch("http://localhost:5000/api/send-otp", {
+    const res = await fetch("https://musicfy-jkhs.onrender.com/api/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: userEmail })
@@ -86,7 +86,7 @@ function startTimer() {
 
 // RESEND OTP
 document.getElementById("resendBtn").addEventListener("click", async () => {
-    const res = await fetch("http://localhost:5000/api/resend-otp", {
+    const res = await fetch("https://musicfy-jkhs.onrender.com/api/resend-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: userEmail })
@@ -105,7 +105,7 @@ document.getElementById("verifyBtn").addEventListener("click", async () => {
     let otp = "";
     inputs.forEach(i => otp += i.value);
 
-    const res = await fetch("http://localhost:5000/api/verify-otp", {
+    const res = await fetch("https://musicfy-jkhs.onrender.com/api/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: userEmail, otp })
@@ -126,7 +126,7 @@ document.getElementById("verifyBtn").addEventListener("click", async () => {
 // FINAL REGISTER
 document.getElementById("finalRegisterBtn").addEventListener("click", async () => {
 
-    const res = await fetch("http://localhost:5000/api/register-final", {
+    const res = await fetch("https://musicfy-jkhs.onrender.com/api/register-final", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullName, email: userEmail, username, password })

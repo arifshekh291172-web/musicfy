@@ -13,7 +13,7 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     }
 
     try {
-        const res = await fetch("http://localhost:5000/api/login", {
+        const res = await fetch("https://musicfy-jkhs.onrender.com/api/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ identifier, password })   // MOST IMPORTANT FIX

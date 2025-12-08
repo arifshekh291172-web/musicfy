@@ -23,7 +23,7 @@ uploadBtn.addEventListener("click", async () => {
 
     statusEl.innerText = "Uploading...";
 
-    fetch("http://localhost:5000/api/music/song/upload", {
+    fetch("https://musicfy-jkhs.onrender.com/api/music/song/upload", {
         method: "POST",
         body: formData
     })

@@ -6,7 +6,7 @@ if (!token) {
   window.location.href = "login.html";
 } else {
   // Fetch user info from protected /me
-  fetch("http://localhost:5000/api/me", {
+  fetch("https://musicfy-jkhs.onrender.com/api/me", {
     method: "GET",
     headers: {
       "Authorization": "Bearer " + token
@@ -39,7 +39,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
     return;
   }
 
-  fetch("http://localhost:5000/api/logout", {
+  fetch("https://musicfy-jkhs.onrender.com/api/logout", {
     method: "POST",
     headers: {
       "Authorization": "Bearer " + token,

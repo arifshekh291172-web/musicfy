@@ -201,7 +201,7 @@
             }
 
             // STEP 1 → CREATE ORDER
-            fetch("http://localhost:5000/api/payment/create-order", {
+            fetch("https://musicfy-jkhs.onrender.com/api/payment/create-order", {
                 method: "POST",
                 headers: {
                     "Authorization": "Bearer " + token,
@@ -224,7 +224,7 @@
 
                         "handler": function (response) {
                             // VERIFY
-                            fetch("http://localhost:5000/api/payment/verify", {
+                            fetch("https://musicfy-jkhs.onrender.com/api/payment/verify", {
                                 method: "POST",
                                 headers: {
                                     "Authorization": "Bearer " + token,

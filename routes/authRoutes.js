@@ -9,7 +9,7 @@ const auth = require("../middleware/authMiddleware");
 
 
 // ======================================================
-// 1) SEND OTP (STEP 1)
+// 1) SEND OTP (REGISTER STEP 1)
 // ======================================================
 router.post("/send-otp", async (req, res) => {
   try {
@@ -18,12 +18,10 @@ router.post("/send-otp", async (req, res) => {
     if (!email)
       return res.json({ success: false, message: "Email is required" });
 
-    // Check if already registered
     const exists = await User.findOne({ email });
     if (exists)
       return res.json({ success: false, message: "Email already registered" });
 
-    // Generate OTP
     const otpValue = Math.floor(100000 + Math.random() * 900000).toString();
 
     await OTP.deleteMany({ email });
@@ -40,10 +38,7 @@ router.post("/send-otp", async (req, res) => {
       `<h2>Your OTP Code:</h2><h1>${otpValue}</h1>`
     );
 
-    return res.json({
-      success: true,
-      message: "OTP sent successfully!"
-    });
+    return res.json({ success: true, message: "OTP sent successfully!" });
 
   } catch (err) {
     console.log("SEND OTP ERROR:", err);
@@ -52,16 +47,14 @@ router.post("/send-otp", async (req, res) => {
 });
 
 
-
 // ======================================================
-// 2) VERIFY OTP (STEP 2)
+// 2) VERIFY OTP (REGISTER STEP 2)
 // ======================================================
 router.post("/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
 
     const otpData = await OTP.findOne({ email });
-
     if (!otpData)
       return res.json({ success: false, message: "OTP not found" });
 
@@ -73,17 +66,13 @@ router.post("/verify-otp", async (req, res) => {
 
     await OTP.deleteMany({ email });
 
-    return res.json({
-      success: true,
-      message: "OTP verified successfully"
-    });
+    return res.json({ success: true, message: "OTP verified successfully" });
 
   } catch (err) {
     console.log("VERIFY OTP ERROR:", err);
     return res.json({ success: false, message: "Server error" });
   }
 });
-
 
 
 // ======================================================
@@ -122,7 +111,6 @@ router.post("/register-final", async (req, res) => {
 });
 
 
-
 // ======================================================
 // 4) RESEND OTP
 // ======================================================
@@ -143,7 +131,7 @@ router.post("/resend-otp", async (req, res) => {
     await sendEmail(
       email,
       "Your New OTP Verification Code",
-      `<h2>Your new OTP:</h1><h1>${otpValue}</h1>`
+      `<h2>Your new OTP:</h2><h1>${otpValue}</h1>`
     );
 
     return res.json({ success: true, message: "New OTP sent!" });
@@ -153,7 +141,6 @@ router.post("/resend-otp", async (req, res) => {
     return res.json({ success: false, message: "Server error" });
   }
 });
-
 
 
 // ======================================================
@@ -166,7 +153,6 @@ router.post("/login", async (req, res) => {
     if (!identifier || !password)
       return res.json({ success: false, message: "All fields required" });
 
-    // LOGIN WITH EMAIL OR USERNAME
     const user = await User.findOne({
       $or: [
         { email: identifier.toLowerCase() },
@@ -208,7 +194,6 @@ router.post("/login", async (req, res) => {
 });
 
 
-
 // ======================================================
 // 6) GET CURRENT USER
 // ======================================================
@@ -222,7 +207,6 @@ router.get("/me", auth, (req, res) => {
     }
   });
 });
-
 
 
 // ======================================================
@@ -241,5 +225,101 @@ router.post("/logout", auth, async (req, res) => {
   }
 });
 
+
+// ======================================================
+// 8) FORGOT PASSWORD → SEND OTP
+// ======================================================
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) return res.json({ success: false, message: "Email required" });
+
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.json({ success: false, message: "Email not registered" });
+
+    // Create OTP
+    const otpValue = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await OTP.deleteMany({ email });
+
+    await OTP.create({
+      email,
+      otp: otpValue,
+      expiry: Date.now() + 10 * 60 * 1000
+    });
+
+    await sendEmail(
+      email,
+      "Musicfy Password Reset OTP",
+      `<h2>Your Password Reset OTP:</h2><h1>${otpValue}</h1>`
+    );
+
+    return res.json({ success: true, message: "OTP sent to email!" });
+
+  } catch (err) {
+    console.log("FORGOT PASSWORD ERROR:", err);
+    return res.json({ success: false, message: "Server error" });
+  }
+});
+
+
+// ======================================================
+// 9) VERIFY RESET OTP
+// ======================================================
+router.post("/verify-reset-otp", async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    const otpData = await OTP.findOne({ email });
+
+    if (!otpData)
+      return res.json({ success: false, message: "OTP not found" });
+
+    if (otpData.expiry < Date.now())
+      return res.json({ success: false, message: "OTP expired" });
+
+    if (otpData.otp !== otp)
+      return res.json({ success: false, message: "Incorrect OTP" });
+
+    return res.json({ success: true, message: "OTP Verified" });
+
+  } catch (err) {
+    console.log("VERIFY RESET OTP ERROR:", err);
+    return res.json({ success: false, message: "Server error" });
+  }
+});
+
+
+// ======================================================
+// 10) RESET PASSWORD
+// ======================================================
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    if (!email || !newPassword)
+      return res.json({ success: false, message: "All fields required" });
+
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.json({ success: false, message: "User not found" });
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashed;
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: "Password reset successful!"
+    });
+
+  } catch (err) {
+    console.log("RESET PASSWORD ERROR:", err);
+    return res.json({ success: false, message: "Server error" });
+  }
+});
 
 module.exports = router;

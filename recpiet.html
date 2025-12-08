@@ -128,7 +128,7 @@
       window.location.href = "login.html";
     }
 
-    fetch("http://localhost:5000/api/payment/latest", {
+    fetch("https://musicfy-jkhs.onrender.com/api/payment/latest", {
       method: "GET",
       headers: { "Authorization": "Bearer " + token }
     })
@@ -154,7 +154,7 @@
         document.getElementById("date").innerText = new Date(p.createdAt).toLocaleString();
 
         // Renewal Date (from backend expiry field)
-        fetch("http://localhost:5000/api/premium/status", {
+        fetch("https://musicfy-jkhs.onrender.com/api/premium/status", {
           headers: { "Authorization": "Bearer " + token }
         })
           .then(res => res.json())

@@ -9,7 +9,7 @@ document.getElementById("uploadSongForm").addEventListener("submit", async (e) =
 
     const token = localStorage.getItem("musicfy_token");
 
-    const res = await fetch("http://localhost:5000/api/music/upload", {
+    const res = await fetch("https://musicfy-jkhs.onrender.com/api/music/upload", {
         method: "POST",
         headers: {
             Authorization: "Bearer " + token

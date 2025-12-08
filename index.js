@@ -100,7 +100,7 @@ function showLoggedInUI(name) {
 }
 
 if (token) {
-    fetch("http://localhost:5000/api/me", {
+    fetch("https://musicfy-jkhs.onrender.com/api/me", {
         headers: { Authorization: "Bearer " + token }
     })
         .then(res => res.json())
@@ -132,7 +132,7 @@ logoutBtn.onclick = () => {
 function checkPremiumStatus() {
     if (!token) return;
 
-    fetch("http://localhost:5000/api/premium/status", {
+    fetch("https://musicfy-jkhs.onrender.com/api/premium/status", {
         headers: { Authorization: "Bearer " + token }
     })
         .then(res => res.json())
@@ -206,7 +206,7 @@ searchInput.addEventListener("input", function () {
         return;
     }
 
-    fetch(`http://localhost:5000/api/music/search?q=${encodeURIComponent(q)}`)
+    fetch(`https://musicfy-jkhs.onrender.com/api/music/search?q=${encodeURIComponent(q)}`)
         .then(res => res.json())
         .then(data => {
             const songsDiv = document.getElementById("songsContainer");
@@ -269,7 +269,7 @@ window.playRecent = function (songId) {
     const index = songQueue.findIndex(s => s._id == songId);
     if (index !== -1) return playByIndex(index);
 
-    fetch("http://localhost:5000/api/music/allsongs")
+    fetch("https://musicfy-jkhs.onrender.com/api/music/allsongs")
         .then(r => r.json())
         .then(d => {
             songQueue = d.songs.map(s => ({ ...s, source: "backend" }));
@@ -286,7 +286,7 @@ window.playRecent = function (songId) {
 function saveRecent(songId) {
     if (!token) return;
 
-    fetch("http://localhost:5000/api/music/recent/add", {
+    fetch("https://musicfy-jkhs.onrender.com/api/music/recent/add", {
         method: "POST",
         headers: {
             Authorization: "Bearer " + token,
@@ -305,7 +305,7 @@ function saveRecent(songId) {
 function loadRecent() {
     const div = document.getElementById("recentContainer");
 
-    fetch("http://localhost:5000/api/music/recent", {
+    fetch("https://musicfy-jkhs.onrender.com/api/music/recent", {
         headers: { Authorization: "Bearer " + token }
     })
         .then(res => res.json())
@@ -413,7 +413,7 @@ lyricsBtn.onclick = () => {
     if (!isPremium) return alert("Lyrics only for premium users.");
     if (!currentSongId) return alert("Lyrics only available for backend songs.");
 
-    fetch(`http://localhost:5000/api/music/lyrics/${currentSongId}`, {
+    fetch(`https://musicfy-jkhs.onrender.com/api/music/lyrics/${currentSongId}`, {
         headers: { Authorization: "Bearer " + token }
     })
         .then(r => r.json())
@@ -441,7 +441,7 @@ createPlaylistBtn.onclick = () => {
     const name = newPlaylistName.value.trim();
     if (!name) return alert("Enter playlist name!");
 
-    fetch("http://localhost:5000/api/music/playlist/create", {
+    fetch("https://musicfy-jkhs.onrender.com/api/music/playlist/create", {
         method: "POST",
         headers: {
             Authorization: "Bearer " + token,
@@ -462,7 +462,7 @@ createPlaylistBtn.onclick = () => {
 function loadPlaylists() {
     if (!token) return;
 
-    fetch("http://localhost:5000/api/music/playlist/my", {
+    fetch("https://musicfy-jkhs.onrender.com/api/music/playlist/my", {
         headers: { Authorization: "Bearer " + token }
     })
         .then(r => r.json())
