@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musicfy Premium</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+        }
+
+        .header img {
+            width: 140px;
+        }
+
+        .header button {
+            background: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 50px 20px 20px;
+        }
+
+        .hero h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: #b3b3b3;
+            font-size: 16px;
+        }
+
+        .plans {
+            max-width: 1050px;
+            margin: 30px auto 50px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+        }
+
+        .card {
+            background: #181818;
+            padding: 25px;
+            border-radius: 15px;
+            width: 300px;
+            box-sizing: border-box;
+            transition: 0.2s ease;
+            border: 1px solid #282828;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #1db954;
+            box-shadow: 0 0 20px rgba(29, 185, 84, 0.2);
+        }
+
+        .tag {
+            display: inline-block;
+            background: #1db954;
+            color: #000;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+        }
+
+        .card h2 {
+            margin: 5px 0 10px;
+        }
+
+        .price {
+            font-size: 26px;
+            font-weight: bold;
+            margin: 5px 0 12px;
+        }
+
+        .price span {
+            font-size: 13px;
+            color: #b3b3b3;
+            font-weight: normal;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0;
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+
+        ul li {
+            margin-bottom: 6px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            background: #1db954;
+            color: #000;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        .btn:hover {
+            background: #1ed760;
+        }
+
+        .note {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <img src="logo.svg" alt="Musicfy">
+        <a href="index.html">
+            <button>Back to Musicfy</button>
+        </a>
+    </div>
+
+    <div class="hero">
+        <h1>Go Premium for less than Spotify</h1>
+        <p>All the benefits you love – ad-free, offline, high-quality music – at a lower price than Spotify.</p>
+    </div>
+
+    <div class="plans">
+        <!-- Individual -->
+        <div class="card">
+            <span class="tag">Best for you</span>
+            <h2>Individual</h2>
+            <div class="price">₹79 <span>/ month</span></div>
+            <ul>
+                <li>1 premium account</li>
+                <li>Ad-free music listening</li>
+                <li>High quality audio</li>
+                <li>Offline downloads</li>
+                <li>Unlimited skips</li>
+            </ul>
+            <button class="btn" onclick="goToPayment('individual')">Get Individual</button>
+        </div>
+
+        <!-- Duo -->
+        <div class="card">
+            <span class="tag">Popular</span>
+            <h2>Duo</h2>
+            <div class="price">₹129 <span>/ month</span></div>
+            <ul>
+                <li>2 premium accounts</li>
+                <li>Ad-free music for both</li>
+                <li>HQ streaming</li>
+                <li>Download on 2 devices</li>
+                <li>Perfect for couples / roommates</li>
+            </ul>
+            <button class="btn" onclick="goToPayment('duo')">Get Duo</button>
+        </div>
+
+        <!-- Family -->
+        <div class="card">
+            <span class="tag">Best value</span>
+            <h2>Family</h2>
+            <div class="price">₹179 <span>/ month</span></div>
+            <ul>
+                <li>Up to 6 premium accounts</li>
+                <li>Kids-safe listening controls</li>
+                <li>Ad-free music</li>
+                <li>Offline mode & HQ audio</li>
+                <li>Great for families</li>
+            </ul>
+            <button class="btn" onclick="goToPayment('family')">Get Family</button>
+        </div>
+    </div>
+
+    <div class="note">
+        Prices are lower than typical music subscriptions like Spotify. Taxes included where applicable.
+    </div>
+
+    <script>
+        function goToPayment(plan) {
+            window.location.href = "payment.html?plan=" + plan;
+        }
+    </script>
+
+</body>
+
+</html>

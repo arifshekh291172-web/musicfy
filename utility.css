@@ -1,0 +1,98 @@
+.border {
+    /* border: 2px solid red; */
+    margin: 3px;
+}
+
+
+.flex {
+    display: flex;
+
+}
+.podcast{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.ac {
+    border-radius: 20px;
+    font-size: 15px;
+    border: 13px solid #f0f0f0;
+    padding: 0px 15px;
+    font-weight: bolder;
+    margin-top: -2px;
+}
+
+body button,img{
+    cursor: pointer;
+}
+.button button {
+    margin-left: 600px;
+    display: inline-block;
+    position: absolute;
+    justify-content: space-between;
+}
+
+div .btn {
+    margin-left: 463px;
+}
+
+.install-btn {
+    margin-top: -71px;
+    position: relative;
+    display: flex;
+    background: none;
+    left: 24px;
+    color: #b3b3b3;
+    border: none;
+    font-size: 16px;
+}
+
+.home1 {
+    border-radius: 32px;
+    margin-left: -10px;
+    border: 2px solid #171717;
+    margin-top: -7px;
+}
+
+.btn button {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    font-size: 18px;
+    color: #b3b3b3;
+    font-weight: bold;
+    font-family: serif;
+}
+
+.line1 {
+    width: 1px;
+    height: 30px;
+    background: white;
+    margin-left: -17px;
+    position: relative;
+    display: inline-block;
+    top: 1px;
+}
+    .profile {
+        margin-left: 143px;
+        display: flex;
+        margin-top: -42px;
+        height: 45px;
+        width: 120px;
+        justify-content: center;
+        gap: 29px;
+        font-size: 20px;
+    }
+    #prevBtn, #nextBtn, #shuffleBtn, #repeatBtn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+}
+#shuffleBtn.active, 
+#repeatBtn.active {
+    color: #1db954;
+}

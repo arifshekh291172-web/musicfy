@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Inter, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background-image: url("background.png");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(3px);
+}
+
+.login-container {
+    position: relative;
+    z-index: 10;
+    width: 380px;
+    padding: 35px;
+    background: rgba(20,20,20,0.92);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    text-align: center;
+}
+
+.logo {
+    font-size: 42px;
+    font-weight: 700;
+    color: #1db954;
+    margin-bottom: 15px;
+}
+
+h2 {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-top: 12px;
+    color: #ccc;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 6px;
+    background: #2a2a2a;
+    border: none;
+    color: white;
+}
+
+.password-box {
+    position: relative;
+}
+
+#togglePassword {
+    position: absolute;
+    right: 12px;
+    top: 15px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 22px;
+    border-radius: 50px;
+    background: #1db954;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background: #1ed760;
+}
+
+.register-text {
+    margin-top: 15px;
+    color: #bbb;
+}
+
+.register-text a {
+    color: #1db954;
+}

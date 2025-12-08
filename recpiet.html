@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Musicfy Premium Receipt</title>
+
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .receipt-box {
+      background: #181818;
+      padding: 30px;
+      border-radius: 14px;
+      width: 420px;
+      box-shadow: 0 0 20px rgba(29, 185, 84, 0.25);
+      border: 1px solid #1db95444;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 5px;
+      text-align: center;
+      color: #1db954;
+    }
+
+    .sub {
+      text-align: center;
+      color: #bbb;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .field {
+      margin: 12px 0;
+      font-size: 15px;
+      color: #ccc;
+    }
+
+    .field span {
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .line {
+      width: 100%;
+      height: 1px;
+      background: #333;
+      margin: 22px 0;
+    }
+
+    .back-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 25px;
+      background: #1db954;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    .back-btn:hover {
+      background: #1ed760;
+    }
+
+    .small-text {
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="receipt-box">
+    <h1>Premium Subscription Receipt</h1>
+    <div class="sub">Thank you for upgrading to Musicfy Premium</div>
+
+    <div class="field">Plan: <span id="planName">Loading...</span></div>
+    <div class="field">Amount: <span id="amount">-</span></div>
+
+    <div class="field">GST (18%): <span id="gstAmount">-</span></div>
+    <div class="field">Total Paid: <span id="totalPaid">-</span></div>
+
+    <div class="line"></div>
+
+    <div class="field">Payment ID: <span id="paymentId">-</span></div>
+    <div class="field">Order ID: <span id="orderId">-</span></div>
+    <div class="field">Date: <span id="date">-</span></div>
+
+    <div class="field">Next Renewal: <span id="renewalDate">-</span></div>
+
+    <button class="back-btn" onclick="window.location.href='index.html'">
+      Back to Musicfy
+    </button>
+
+    <div class="small-text">Keep this receipt for your records.</div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("musicfy_token");
+
+    if (!token) {
+      alert("Login required to view receipt.");
+      window.location.href = "login.html";
+    }
+
+    fetch("http://localhost:5000/api/payment/latest", {
+      method: "GET",
+      headers: { "Authorization": "Bearer " + token }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.success) {
+          alert("No recent payment found.");
+          return;
+        }
+
+        const p = data.payment;
+        const baseAmount = p.amount;
+        const gst = (baseAmount * 0.18).toFixed(2);
+        const total = (baseAmount + baseAmount * 0.18).toFixed(2);
+
+        document.getElementById("planName").innerText = p.planName;
+        document.getElementById("amount").innerText = "₹" + baseAmount;
+        document.getElementById("gstAmount").innerText = "₹" + gst;
+        document.getElementById("totalPaid").innerText = "₹" + total;
+
+        document.getElementById("paymentId").innerText = p.razorpayPaymentId;
+        document.getElementById("orderId").innerText = p.razorpayOrderId;
+        document.getElementById("date").innerText = new Date(p.createdAt).toLocaleString();
+
+        // Renewal Date (from backend expiry field)
+        fetch("http://localhost:5000/api/premium/status", {
+          headers: { "Authorization": "Bearer " + token }
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.premium) {
+              document.getElementById("renewalDate").innerText =
+                new Date(data.expiry).toLocaleString();
+            } else {
+              document.getElementById("renewalDate").innerText = "-";
+            }
+          });
+      });
+  </script>
+
+</body>
+
+</html>

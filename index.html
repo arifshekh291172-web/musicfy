@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musicfy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- TOP HEADER -->
+    <header class="header" id="mainHeader">
+        <!-- Left: arrows + logo + home -->
+        <div class="header-left">
+            <button class="icon-btn nav-btn" id="backBtn">‹</button>
+            <button class="icon-btn nav-btn" id="forwardBtn">›</button>
+
+            <img src="favicon.ico" class="logo" alt="Musicfy">
+            <a href="index.html">
+                <img src="home.svg" class="home-icon" alt="Home" style="filter: invert(1);">
+            </a>
+        </div>
+
+        <!-- Center: search -->
+        <div class="header-center">
+            <input type="search" class="search" placeholder="What do you want to listen to?">
+        </div>
+
+        <!-- Right: premium + auth + hamburger -->
+        <div class="header-right">
+            <button class="premium-btn" onclick="location.href='premium.html'">Premium</button>
+
+            <a href="register.html"><button id="signupBtn" class="ghost-btn">Signup</button></a>
+            <a href="login.html">
+                <button id="loginBtn" class="solid-btn">Login</button>
+            </a>
+
+            <div id="loggedInProfile" class="logged-in" style="display:none;">
+                <span id="userName"></span>
+                <button id="logoutBtn" class="solid-btn small">Logout</button>
+            </div>
+
+            <div id="premiumBadge" class="premium-badge" style="display:none;"></div>
+
+            <!-- Mobile menu button -->
+            <button class="icon-btn hamburger" id="menuToggle">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MOBILE SLIDE MENU -->
+    <nav id="mobileMenu" class="mobile-menu">
+        <div class="mobile-menu-inner">
+            <div class="mobile-menu-top">
+                <img src="logo.svg" class="logo small" alt="Musicfy">
+                <button id="closeMobileMenu" class="icon-btn">✕</button>
+            </div>
+
+            <button class="mobile-link" onclick="location.href='index.html'">Home</button>
+            <button class="mobile-link" onclick="document.querySelector('.search').focus()">Search</button>
+            <button class="mobile-link">Your Library</button>
+            <button class="mobile-link" onclick="location.href='premium.html'">Premium</button>
+
+            <hr>
+
+            <button class="mobile-link" id="mobileSignup">Signup</button>
+            <button class="mobile-link" id="mobileLogin">Login</button>
+        </div>
+    </nav>
+
+    <!-- MAIN LAYOUT -->
+    <div class="layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="your">
+                <span>Your Library</span>
+                <button class="add" id="addPlaylistBtn">+</button>
+            </div>
+
+            <div class="scroll">
+                <h4>Create your first playlist</h4>
+                <p>It’s easy — we’ll help you</p>
+
+                <button class="playlist-btn" onclick="document.getElementById('addPlaylistBtn').click()">
+                    Create playlist
+                </button>
+
+                <div class="spacer"></div>
+
+                <h4>Find a podcast to follow</h4>
+                <p>We’ll keep you updated</p>
+
+                <button class="playlist-btn">Browse podcasts</button>
+            </div>
+
+            <div class="agreement">
+                <a href="#">Legal</a>
+                <a href="#">Privacy</a>
+                <a href="#">Cookies</a>
+            </div>
+
+            <div class="language">
+                <button>
+                    <img src="language.svg" alt="">
+                    <span>English</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="content">
+
+            <section class="section">
+                <h2>Recently Played</h2>
+                <div id="recentContainer" class="card-row"></div>
+            </section>
+
+            <section class="section">
+                <h2>Trending Songs</h2>
+                <div id="songsContainer" class="card-row"></div>
+            </section>
+
+            <section class="section">
+                <h2>Your Playlists</h2>
+                <div id="playlistContainer" class="card-row"></div>
+            </section>
+
+            <section class="section">
+                <h2>Offline Songs</h2>
+                <div id="offlineContainer" class="card-row"></div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- CREATE PLAYLIST POPUP -->
+    <div id="createPlaylistPopup" class="popup" style="display:none;">
+        <div class="popup-content">
+            <h2>Create Playlist</h2>
+            <input type="text" id="newPlaylistName" placeholder="Playlist name">
+            <button id="createPlaylistBtn">Create</button>
+            <button id="cancelCreatePlaylist" class="close-btn">Cancel</button>
+        </div>
+    </div>
+
+    <!-- MINI PLAYER -->
+    <div id="miniPlayer" class="mini-player">
+        <img id="playerCover" class="player-cover" src="" alt="Cover">
+
+        <div class="info">
+            <h4 id="playerTitle">Play a song</h4>
+            <p id="playerArtist">Artist</p>
+        </div>
+
+        <div class="controls-main">
+            <button id="prevBtn">⏮</button>
+            <button id="playBtn">▶️</button>
+            <button id="nextBtn">⏭</button>
+        </div>
+
+        <input type="range" id="seekBar" value="0">
+
+        <div class="controls-side">
+            <button id="shuffleBtn">🔀</button>
+            <button id="repeatBtn">🔁</button>
+            <button id="lyricsBtn" class="text-btn">Lyrics</button>
+            <button id="openFullscreenBtn" class="icon-btn">⛶</button>
+        </div>
+
+        <audio id="audio"></audio>
+    </div>
+
+    <!-- FULLSCREEN PLAYER -->
+    <div id="fullscreenPlayer" class="fullscreen-player">
+        <button id="closeFullscreenBtn" class="icon-btn close-fs">✕</button>
+
+        <img id="fsCover" class="fullscreen-cover" src="" alt="Cover">
+
+        <div id="fsTitle" class="fs-title">Song Title</div>
+        <div id="fsArtist" class="fs-artist">Artist</div>
+
+        <input type="range" id="fsSeekBar" value="0" class="fs-seek">
+
+        <div class="fs-controls">
+            <button id="fsPrevBtn">⏮</button>
+            <button id="fsPlayBtn">▶️</button>
+            <button id="fsNextBtn">⏭</button>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>

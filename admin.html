@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Song - Musicfy Admin</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+    <div class="upload-box">
+        <h1>Upload New Song</h1>
+
+        <label>Song Title</label>
+        <input type="text" id="title" placeholder="Enter song title">
+
+        <label>Artist</label>
+        <input type="text" id="artist" placeholder="Enter artist name">
+
+        <label>Cover Image (URL or upload)</label>
+        <input type="file" id="coverFile">
+        <input type="text" id="coverUrl" placeholder="OR paste image URL">
+
+        <label>Audio File</label>
+        <input type="file" id="audioFile">
+
+        <button id="uploadBtn">Upload Song</button>
+
+        <p id="status"></p>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

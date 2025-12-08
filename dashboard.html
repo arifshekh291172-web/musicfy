@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>musicfy — Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">musicfy</div>
+      <nav>
+        <a href="#" class="active">Home</a>
+        <a href="#">Playlists</a>
+        <a href="#">Liked Songs</a>
+        <a href="#">Profile</a>
+      </nav>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="welcome" id="welcomeText">Welcome, User</p>
+          <p class="sub">Enjoy your music dashboard.</p>
+        </div>
+      </header>
+
+      <section class="cards">
+        <div class="card">
+          <h3>Daily Mix</h3>
+          <p>Curated songs just for you.</p>
+        </div>
+        <div class="card">
+          <h3>Top Hits</h3>
+          <p>Trending tracks this week.</p>
+        </div>
+        <div class="card">
+          <h3>Chill Vibes</h3>
+          <p>Relax and focus.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

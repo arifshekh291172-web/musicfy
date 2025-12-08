@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musicfy Premium Payment</title>
+
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+        }
+
+        .header img {
+            width: 130px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            display: flex;
+            gap: 30px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+
+        .payment-box, .summary-box {
+            background: #181818;
+            padding: 25px;
+            border-radius: 12px;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .payment-option {
+            background: #222;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.2s;
+        }
+
+        .payment-option:hover {
+            background: #333;
+        }
+
+        .payment-option img {
+            width: 30px;
+        }
+
+        .price {
+            font-size: 26px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 30px;
+            background: #1db954;
+            margin-top: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            color: #fff;
+        }
+
+        .pay-btn:hover {
+            background: #1ed760;
+        }
+
+        .upi-input {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .upi-input input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            background: #2c2c2c;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <img src="logo.svg">
+        <a href="premium.html">
+            <button style="background:#fff;padding:8px 20px;border:none;border-radius:20px;cursor:pointer;">
+                Back
+            </button>
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="payment-box">
+            <h2>Select Payment Method</h2>
+
+            <div class="payment-option" onclick="selectPayment('upi')">
+                <img src="https://cdn-icons-png.flaticon.com/512/825/825454.png">
+                <span>UPI (Google Pay, PhonePe, Paytm)</span>
+            </div>
+
+            <div class="upi-input" id="upiBox">
+                <input type="text" id="upiId" placeholder="Enter UPI ID (name@upi)">
+            </div>
+
+            <div class="payment-option" onclick="selectPayment('card')">
+                <img src="https://cdn-icons-png.flaticon.com/512/633/633611.png">
+                <span>Credit / Debit Card</span>
+            </div>
+
+            <div class="payment-option" onclick="selectPayment('net')">
+                <img src="https://cdn-icons-png.flaticon.com/512/483/483352.png">
+                <span>Netbanking</span>
+            </div>
+
+            <button class="pay-btn" onclick="processPayment()">Pay Now</button>
+        </div>
+
+        <div class="summary-box">
+            <h2>Order Summary</h2>
+
+            <p>Plan: <b id="planName">Musicfy Premium – Individual</b></p>
+            <p>Billed Monthly</p>
+            <p>Includes: Ad-free music, Offline mode, HQ audio</p>
+
+            <div class="price" id="planPrice">₹79 / month</div>
+        </div>
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        let selectedMethod = null;
+
+        // ------------------------------------------
+        // GET PLAN FROM URL
+        // ------------------------------------------
+        const urlParams = new URLSearchParams(window.location.search);
+        const plan = urlParams.get("plan") || "individual";
+
+        // PLAN PRICE SETUP
+        let price = 79;
+        let planText = "Musicfy Premium – Individual";
+
+        if (plan === "duo") {
+            price = 129;
+            planText = "Musicfy Premium – Duo Plan";
+        }
+
+        if (plan === "family") {
+            price = 179;
+            planText = "Musicfy Premium – Family Plan";
+        }
+
+        // UPDATE UI
+        document.getElementById("planName").innerText = planText;
+        document.getElementById("planPrice").innerText = `₹${price} / month`;
+
+
+        function selectPayment(method) {
+            selectedMethod = method;
+            document.getElementById("upiBox").style.display = method === "upi" ? "block" : "none";
+        }
+
+        // ------------------------------------------
+        // PROCESS PAYMENT
+        // ------------------------------------------
+        function processPayment() {
+
+            const token = localStorage.getItem("musicfy_token");
+            if (!token) return alert("Login required before payment.");
+
+            if (!selectedMethod) return alert("Select a payment method");
+
+            if (selectedMethod === "upi") {
+                const upi = document.getElementById("upiId").value.trim();
+                if (!upi) return alert("Enter UPI ID");
+            }
+
+            // STEP 1 → CREATE ORDER
+            fetch("http://localhost:5000/api/payment/create-order", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ amount: price })
+            })
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data.success) return alert("Order creation error");
+
+                    var options = {
+                        "key": "rzp_test_xxxxx", // Replace with your Razorpay Key ID
+                        "amount": data.order.amount,
+                        "currency": "INR",
+                        "name": planText,
+                        "description": "Musicfy Premium Subscription",
+                        "order_id": data.order.id,
+
+                        "handler": function (response) {
+                            // VERIFY
+                            fetch("http://localhost:5000/api/payment/verify", {
+                                method: "POST",
+                                headers: {
+                                    "Authorization": "Bearer " + token,
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(response)
+                            })
+                                .then(res => res.json())
+                                .then(done => {
+                                    if (done.success) {
+                                        alert("Payment Successful! Premium Activated.");
+                                        window.location.href = "receipt.html";
+                                    } else {
+                                        alert("Payment verification failed");
+                                    }
+                                });
+                        },
+
+                        "theme": { "color": "#1db954" }
+                    };
+
+                    var rzpay = new Razorpay(options);
+                    rzpay.open();
+                });
+        }
+    </script>
+
+</body>
+
+</html>
