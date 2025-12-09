@@ -6,12 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Musicfy</title>
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* TIME UNDER SEEK BAR */
+        .time-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #b3b3b3;
+            margin: 4px 0;
+            padding: 0 5px;
+        }
+
+        /* BUFFER LOADER */
+        .loader {
+            width: 18px;
+            height: 18px;
+            border: 3px solid #ffffff50;
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
     <!-- TOP HEADER -->
     <header class="header" id="mainHeader">
-        <!-- Left: arrows + logo + home -->
         <div class="header-left">
             <button class="icon-btn nav-btn" id="backBtn">‹</button>
             <button class="icon-btn nav-btn" id="forwardBtn">›</button>
@@ -22,19 +50,15 @@
             </a>
         </div>
 
-        <!-- Center: search -->
         <div class="header-center">
             <input type="search" class="search" placeholder="What do you want to listen to?">
         </div>
 
-        <!-- Right: premium + auth + hamburger -->
         <div class="header-right">
             <button class="premium-btn" onclick="location.href='premium.html'">Premium</button>
 
             <a href="register.html"><button id="signupBtn" class="ghost-btn">Signup</button></a>
-            <a href="login.html">
-                <button id="loginBtn" class="solid-btn">Login</button>
-            </a>
+            <a href="login.html"><button id="loginBtn" class="solid-btn">Login</button></a>
 
             <div id="loggedInProfile" class="logged-in" style="display:none;">
                 <span id="userName"></span>
@@ -43,7 +67,6 @@
 
             <div id="premiumBadge" class="premium-badge" style="display:none;"></div>
 
-            <!-- Mobile menu button -->
             <button class="icon-btn hamburger" id="menuToggle">
                 <span></span><span></span><span></span>
             </button>
@@ -72,7 +95,6 @@
 
     <!-- MAIN LAYOUT -->
     <div class="layout">
-        <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
             <div class="your">
                 <span>Your Library</span>
@@ -156,11 +178,21 @@
 
         <div class="controls-main">
             <button id="prevBtn">⏮</button>
-            <button id="playBtn">▶️</button>
+
+            <!-- Play Button (Loader Added Dynamically) -->
+            <button id="playBtn">
+                ▶️
+            </button>
+
             <button id="nextBtn">⏭</button>
         </div>
 
-        <input type="range" id="seekBar" value="0">
+        <!-- TIME ROW -->
+        <div class="time-row">
+            <span id="currentTime">0:00</span>
+            <input type="range" id="seekBar" value="0">
+            <span id="totalTime">0:00</span>
+        </div>
 
         <div class="controls-side">
             <button id="shuffleBtn">🔀</button>

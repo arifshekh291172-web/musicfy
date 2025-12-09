@@ -1,61 +1,183 @@
+/* ------------------------------
+   GLOBAL BACKGROUND
+------------------------------ */
 body {
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: white;
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top, #111 0%, #000 60%);
+    font-family: "Poppins", sans-serif;
     display: flex;
     justify-content: center;
-    margin-top: 70px;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
 }
 
+
+/* ------------------------------
+   GLASS CONTAINER
+------------------------------ */
 .container {
-    background: #1E1E1E;
-    padding: 30px;
     width: 350px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px #000;
+    padding: 28px;
     text-align: center;
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(14px);
+
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.55);
+
+    animation: fadeIn 0.7s ease-out;
+    transform: translateY(0);
 }
 
-h2 {
-    margin-bottom: 10px;
+
+/* ------------------------------
+   TEXT
+------------------------------ */
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
 }
 
 .subtitle {
-    color: #b3b3b3;
     font-size: 14px;
-    margin-bottom: 20px;
+    color: #ccc;
+    margin-bottom: 15px;
 }
 
-input {
+
+/* ------------------------------
+   INPUT FIELDS
+------------------------------ */
+.input {
     width: 100%;
     padding: 12px;
-    margin-bottom: 12px;
-    border-radius: 6px;
-    border: none;
+    margin-top: 14px;
+    border-radius: 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+
+    font-size: 15px;
     outline: none;
+    transition: 0.35s ease;
 }
 
+.input:focus {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: #1db954;
+    box-shadow: 0 0 8px #1db954;
+}
+
+
+/* ------------------------------
+   BUTTONS
+------------------------------ */
 .btn {
     width: 100%;
+    margin-top: 18px;
     padding: 12px;
-    background: #1DB954;
+
+    background: #1db954;
+    color: #000;
+    font-size: 16px;
+    font-weight: 600;
     border: none;
-    border-radius: 6px;
     cursor: pointer;
-    font-size: 15px;
-    font-weight: bold;
+
+    border-radius: 12px;
+    transition: 0.3s;
 }
 
 .btn:hover {
-    opacity: 0.85;
+    background: #18a347;
 }
 
-.back {
+
+/* Transparent Outline Button */
+.btn-outline {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+
+    background: transparent;
+    border-radius: 12px;
+
+    border: 2px solid #1db954;
+    color: #1db954;
+    cursor: pointer;
+    font-size: 15px;
+
+    transition: 0.3s ease;
+}
+
+.btn-outline:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: #888;
+    color: #888;
+}
+
+.btn-outline:hover:not(:disabled) {
+    background: #1db954;
+    color: black;
+}
+
+
+/* ------------------------------
+   SECTIONS (OTP & RESET)
+------------------------------ */
+.section {
     margin-top: 15px;
-    font-size: 14px;
+    opacity: 0;
+    animation: slideUp 0.7s forwards ease;
 }
 
-.back a {
-    color: #1DB954;
-    text-decoration: none;
+.hidden {
+    display: none;
+}
+
+
+/* ------------------------------
+   TIMER STYLE
+------------------------------ */
+.timer-box {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #ffdf7e;
+    font-weight: 600;
+}
+
+
+/* ------------------------------
+   ANIMATIONS
+------------------------------ */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ------------------------------
+   MOBILE RESPONSIVE
+------------------------------ */
+@media (max-width: 450px) {
+    .container {
+        width: 90%;
+        padding: 22px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
 }

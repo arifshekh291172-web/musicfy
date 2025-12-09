@@ -1,44 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password – Musicfy</title>
+    <title>Forgot Password - Musicfy</title>
     <link rel="stylesheet" href="forgot.css">
 </head>
 
 <body>
-    <div class="container">
 
-        <h2>Reset your password</h2>
-        <p class="subtitle">Enter your email and we'll send you an OTP to reset your password.</p>
+<div class="container fade-in">
 
-        <!-- STEP 1: SEND OTP -->
-        <div id="stepEmail">
-            <input type="email" id="email" placeholder="Enter your email">
-            <button class="btn" id="sendOtpBtn">Send OTP</button>
+    <h2 class="title">Reset Password</h2>
+    <p class="subtitle">Enter your username or email</p>
+
+    <input type="text" id="identifier" class="input" placeholder="Username or Email">
+
+    <button id="sendOtpBtn" class="btn">Send OTP</button>
+
+    <div id="otpSection" class="section hidden slide-up">
+        <input type="text" id="otp" class="input" placeholder="Enter OTP">
+
+        <div class="timer-box">
+            <span id="otpTimer">00:30</span>
         </div>
 
-        <!-- STEP 2: VERIFY OTP -->
-        <div id="stepOtp" style="display:none;">
-            <input type="text" id="otp" placeholder="Enter OTP">
-            <button class="btn" id="verifyOtpBtn">Verify OTP</button>
-        </div>
+        <button id="verifyOtpBtn" class="btn">Verify OTP</button>
 
-        <!-- STEP 3: RESET PASSWORD -->
-        <div id="stepReset" style="display:none;">
-            <input type="password" id="newPassword" placeholder="Enter new password">
-            <input type="password" id="confirmPassword" placeholder="Confirm new password">
-            <button class="btn" id="resetPasswordBtn">Reset Password</button>
-        </div>
-
-        <p class="back">
-            <a href="login.html">Back to Login</a>
-        </p>
+        <button id="resendBtn" class="btn-outline" disabled>Resend OTP</button>
     </div>
 
-    <script src="forgot.js"></script>
-</body>
+    <div id="resetSection" class="section hidden slide-up">
+        <input type="password" id="newPassword" class="input" placeholder="New Password">
+        <input type="password" id="confirmPassword" class="input" placeholder="Confirm Password">
 
+        <button id="resetBtn" class="btn">Reset Password</button>
+    </div>
+
+</div>
+
+<script src="forgot.js"></script>
+</body>
 </html>

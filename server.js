@@ -41,6 +41,7 @@ app.use("/api/music", playlistRoutes);           // Playlist routes
 app.use("/api/music", lyricsRoutes);             // Lyrics routes
 app.use("/api/premium", premiumRoutes);          // Premium check
 app.use("/api/payment", paymentRoutes);          // Razorpay payments
+app.use("/api/auth/forgot", require("./routes/forgot"));
 
 // ------------------------------
 // Default Route (API Test)
