@@ -6,29 +6,36 @@ const SongSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+
     artist: {
         type: String,
         required: true,
         trim: true
     },
+
     cover: {
-        type: String,       // image URL (CDN / local path)
+        type: String,
         required: true
     },
+
     audioUrl: {
-        type: String,       // mp3 / stream URL
+        type: String,
         required: true
     },
+
+    // OPTIONAL — Hindi/Jamendo songs me category nahi hoti
     category: {
-        type: String,       // "punjabi", "bollywood", "english", "sad", "lofi", "workout" etc.
-        required: true,
+        type: String,
+        default: "other",
         lowercase: true,
         trim: true
     },
+
     plays: {
         type: Number,
-        default: 0          // trending ke liye
+        default: 0
     },
+
     uploadedAt: {
         type: Date,
         default: Date.now

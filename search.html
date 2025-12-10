@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musicfy – Search</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            margin: 0;
+            font-family: system-ui, sans-serif;
+        }
+
+        /* ------------------------------------------------------
+            Sticky Search Header (Spotify Style)
+        ------------------------------------------------------ */
+        .search-header {
+            padding: 18px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        #searchBox {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            background: #181818;
+            border: none;
+            border-radius: 30px;
+            outline: none;
+            color: #fff;
+            transition: 0.2s;
+        }
+
+        #searchBox:focus {
+            background: #222;
+            box-shadow: 0 0 0 2px #1db954;
+        }
+
+        /* ------------------------------------------------------
+            Section Headings
+        ------------------------------------------------------ */
+        h2 {
+            margin: 25px 20px 10px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        /* ------------------------------------------------------
+            Horizontal Scrolling Rows
+        ------------------------------------------------------ */
+        .row-scroll {
+            display: flex;
+            gap: 18px;
+            padding: 0 20px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        /* ------------------------------------------------------
+            Cards (Artist, Album, Song, Playlist)
+        ------------------------------------------------------ */
+        .card {
+            width: 165px;
+            background: #181818;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.18s;
+        }
+
+        .card:hover {
+            background: #282828;
+            transform: translateY(-2px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 165px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .card-title {
+            margin: 10px 0 2px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .card-sub {
+            font-size: 13px;
+            color: #b3b3b3;
+        }
+
+        /* ------------------------------------------------------
+            TOP RESULT BOX
+        ------------------------------------------------------ */
+        #topResultSection {
+            margin: 20px;
+            margin-top: 15px;
+            background: linear-gradient(180deg, #1e1e1e, #121212);
+            padding: 22px;
+            border-radius: 14px;
+            display: none;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .top-box {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+        }
+
+        .top-box img {
+            width: 155px;
+            height: 155px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        }
+
+        .top-info {
+            flex: 1;
+        }
+
+        .top-info h3 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .top-info p {
+            margin-top: 5px;
+            color: #b3b3b3;
+            font-size: 15px;
+        }
+
+        .chip {
+            display: inline-block;
+            background: #222;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+
+        .top-play-btn {
+            margin-top: 12px;
+            background: #1db954;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #000;
+            transition: 0.2s;
+        }
+
+        .top-play-btn:hover {
+            background: #1ed760;
+        }
+
+        /* ------------------------------------------------------
+            Empty Text
+        ------------------------------------------------------ */
+        #emptyMsg {
+            padding: 20px;
+            color: #aaa;
+            font-size: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SEARCH BAR -->
+    <div class="search-header">
+        <input type="search" id="searchBox" placeholder="Search…" autofocus>
+    </div>
+
+    <!-- TOP RESULT -->
+    <section id="topResultSection">
+        <div id="topResult"></div>
+    </section>
+
+
+    <!-- ARTISTS -->
+    <h2 id="artistTitle" style="display:none;">Artists</h2>
+    <section id="artistSectionWrapper" style="display:none;">
+        <div id="artistSection" class="row-scroll"></div>
+    </section>
+
+    <!-- ALBUMS -->
+    <h2 id="albumTitle" style="display:none;">Albums / Mixes</h2>
+    <section id="albumSectionWrapper" style="display:none;">
+        <div id="albumSection" class="row-scroll"></div>
+    </section>
+
+    <!-- SONGS -->
+    <h2 id="songsTitle" style="display:none;">Songs</h2>
+    <section id="songSectionWrapper" style="display:none;">
+        <div id="songSection" class="row-scroll"></div>
+    </section>
+
+    <!-- PLAYLISTS -->
+    <h2 id="playlistTitle" style="display:none;">Playlists</h2>
+    <section id="playlistSectionWrapper" style="display:none;">
+        <div id="playlistSection" class="row-scroll"></div>
+    </section>
+
+    <!-- EMPTY MESSAGE -->
+    <p id="emptyMsg" style="display:none;">No results found</p>
+
+    <script src="search.js"></script>
+</body>
+
+</html>

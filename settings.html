@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Settings - Musicy</title>
+    <link rel="stylesheet" href="settings.css">
+</head>
+
+<body>
+    <div class="settings-page">
+        <header class="settings-header">
+            <h1>Musicy Settings</h1>
+            <p>Manage your account, preferences, and app experience.</p>
+        </header>
+
+        <main class="settings-container">
+
+            <!-- PROFILE SECTION -->
+            <section class="section">
+                <h2>Account & Profile</h2>
+
+                <div class="profile-row">
+                    <img id="profileImage" src="default.jpg" alt="Profile" class="profile-img">
+                    <div>
+                        <label class="label-small">Profile Photo</label>
+                        <input type="file" id="uploadPhoto" accept="image/*">
+                    </div>
+                </div>
+
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Your username">
+
+                <label>Email</label>
+                <input type="email" id="email" placeholder="Your email">
+
+                <div class="two-cols">
+                    <div>
+                        <label>Date of Birth</label>
+                        <input type="date" id="dob">
+                    </div>
+                    <div>
+                        <label>Gender</label>
+                        <select id="gender">
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>Private Profile</h3>
+                        <p class="hint">Hide your profile & activity from others.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="privacyToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <button class="btn" onclick="saveProfile()">Save Profile</button>
+            </section>
+
+            <!-- PASSWORD -->
+            <section class="section">
+                <h2>Security</h2>
+                <label>Current Password</label>
+                <input type="password" id="oldPass" placeholder="Current password">
+
+                <label>New Password</label>
+                <input type="password" id="newPass" placeholder="New password">
+
+                <button class="btn" onclick="changePassword()">Update Password</button>
+
+                <div class="security-row">
+                    <div>
+                        <h3>Two-Factor Authentication</h3>
+                        <p class="hint">Add an extra layer of security on login.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="twoFAToggle" onchange="toggleTwoFA()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <p class="last-login" id="lastLoginText">Last login: loading...</p>
+            </section>
+
+            <!-- SUBSCRIPTION -->
+            <section class="section">
+                <h2>Subscription & Payments</h2>
+                <p id="premiumStatus">Checking subscription...</p>
+                <p id="premiumExpiry">Expiry: --</p>
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>Auto-Renew</h3>
+                        <p class="hint">Renew premium automatically at the end of the cycle.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="autoRenewToggle" onchange="toggleAutoRenew()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <label>Redeem Coupon</label>
+                <div class="inline-input">
+                    <input type="text" id="couponCode" placeholder="Enter coupon code">
+                    <button class="btn small" onclick="redeemCoupon()">Apply</button>
+                </div>
+
+                <button class="btn premium-btn" onclick="upgradePremium()">Upgrade / Manage Premium</button>
+            </section>
+
+            <!-- MUSIC PREFERENCES -->
+            <section class="section">
+                <h2>Music Preferences</h2>
+
+                <label>Preferred Genres</label>
+                <div class="chip-container" id="genreContainer">
+                    <div class="chip">Hindi</div>
+                    <div class="chip">Punjabi</div>
+                    <div class="chip">English</div>
+                    <div class="chip">LoFi</div>
+                    <div class="chip">Romantic</div>
+                    <div class="chip">Workout</div>
+                    <div class="chip">Party</div>
+                    <div class="chip">Devotional</div>
+                </div>
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>Explicit Content</h3>
+                        <p class="hint">Block songs marked as explicit.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="explicitToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <label>Playback Quality</label>
+                <select id="playQuality">
+                    <option value="auto">Auto</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+
+                <label>Download Quality</label>
+                <select id="downloadQuality">
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+
+                <label>Crossfade Duration: <span id="crossValue">3s</span></label>
+                <input type="range" min="0" max="12" value="3" id="crossfadeSlider">
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>Gapless Playback</h3>
+                        <p class="hint">Remove gaps between songs.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="gaplessToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>Auto-play Next</h3>
+                        <p class="hint">Automatically play recommended songs after queue ends.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="autoplayToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <button class="btn" onclick="saveMusicPreferences()">Save Music Preferences</button>
+            </section>
+
+            <!-- APP / THEME -->
+            <section class="section">
+                <h2>App Appearance & Behaviour</h2>
+
+                <label>Theme</label>
+                <select id="themeSelect" onchange="setTheme()">
+                    <option value="system">System Default</option>
+                    <option value="dark">Dark Mode</option>
+                    <option value="light">Light Mode</option>
+                    <option value="oled">OLED Black</option>
+                </select>
+
+                <label>Accent Color</label>
+                <select id="accentSelect" onchange="setAccentColor()">
+                    <option value="#1db954">Green</option>
+                    <option value="#3b82f6">Blue</option>
+                    <option value="#a855f7">Purple</option>
+                    <option value="#f97316">Orange</option>
+                    <option value="#ef4444">Red</option>
+                </select>
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>Data Saver</h3>
+                        <p class="hint">Reduce data usage by lowering quality.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="dataSaverToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>Animations</h3>
+                        <p class="hint">Turn off for smoother performance.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="animationToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <button class="btn secondary" onclick="clearCache()">Clear App Cache</button>
+            </section>
+
+            <!-- REGIONAL -->
+            <section class="section">
+                <h2>Regional Settings</h2>
+
+                <label>Language</label>
+                <select id="langSelect">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="mr">Marathi</option>
+                    <option value="pa">Punjabi</option>
+                </select>
+
+                <label>Country</label>
+                <select id="countrySelect">
+                    <option value="India">India</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Nepal">Nepal</option>
+                    <option value="USA">USA</option>
+                </select>
+
+                <button class="btn" onclick="saveRegionalSettings()">Save Regional Settings</button>
+            </section>
+
+            <!-- NOTIFICATIONS -->
+            <section class="section">
+                <h2>Notifications</h2>
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>Allow Notifications</h3>
+                        <p class="hint">Control all app notifications.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="notifyMasterToggle" onchange="toggleMasterNotifications()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>New Releases</h3>
+                        <p class="hint">Get notified when new songs drop.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="notifyNewToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>Playlist Updates</h3>
+                        <p class="hint">When playlists you follow are updated.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="notifyPlaylistToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-row">
+                    <div>
+                        <h3>Offers & Promotions</h3>
+                        <p class="hint">Receive Musicy offers and discounts.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="notifyOffersToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <button class="btn" onclick="saveNotificationSettings()">Save Notification Settings</button>
+            </section>
+
+            <!-- CONNECTED DEVICES -->
+            <section class="section">
+                <h2>Connected Devices</h2>
+                <ul id="deviceList"></ul>
+            </section>
+
+            <!-- SUPPORT -->
+            <section class="section">
+                <h2>Support</h2>
+
+                <button class="btn" onclick="openTicket()">Raise Support Ticket</button>
+                <button class="btn" onclick="openAIChat()">AI Assistant Help</button>
+                <button class="btn" onclick="openReport()">Report a Problem</button>
+
+                <div class="links">
+                    <a href="/terms.html">Terms of Service</a>
+                    <a href="/privacy.html">Privacy Policy</a>
+                </div>
+            </section>
+
+            <!-- LOGOUT -->
+            <section class="section">
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+
+</html>

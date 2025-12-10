@@ -720,3 +720,64 @@ body {
         text-align: center;
     }
 }
+/* Favourite Heart Button */
+.fav-btn {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    font-size: 18px;
+    background: rgba(0,0,0,0.5);
+    color: #bbb;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.25s ease;
+    opacity: 0;
+    z-index: 12;
+}
+
+.song-card:hover .fav-btn {
+    opacity: 1;
+}
+
+.fav-btn.active {
+    color: #ee1d40;
+    text-shadow: 0 0 12px rgba(255,60,90,0.8);
+}
+
+/* POP animation */
+.fav-btn.pop {
+    transform: scale(1.4);
+    transition: transform 0.15s ease;
+}
+
+/* Glow effect */
+.fav-btn.active {
+    filter: drop-shadow(0 0 6px rgba(255,0,80,0.9));
+}
+.suggest-box {
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    background: #181818;
+    border-radius: 8px;
+    padding: 10px;
+    display: none;
+    z-index: 100;
+}
+
+.suggest-item {
+    padding: 10px;
+    color: white;
+    cursor: pointer;
+    border-bottom: 1px solid #222;
+}
+
+.suggest-item:hover {
+    background: #282828;
+}

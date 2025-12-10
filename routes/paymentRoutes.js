@@ -7,10 +7,9 @@ const Payment = require("../models/Payment");
 
 const router = express.Router();
 
-
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 // PLAN CONFIG (amount in INR, duration in days)

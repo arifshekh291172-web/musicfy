@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Musicfy</title>
+
     <link rel="stylesheet" href="style.css">
 
     <style>
-        /* TIME UNDER SEEK BAR */
+        /* LOCAL EXTRA STYLES */
+
         .time-row {
             display: flex;
             justify-content: space-between;
             font-size: 12px;
             color: #b3b3b3;
-            margin: 4px 0;
+            margin-top: 4px;
             padding: 0 5px;
         }
 
-        /* BUFFER LOADER */
         .loader {
             width: 18px;
             height: 18px;
@@ -28,30 +28,59 @@
             animation: spin 0.7s linear infinite;
             margin: auto;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+        /* -------------------------------
+           SEARCH SUGGESTION BOX (NEW)
+        -------------------------------- */
+        #suggestBox {
+            position: absolute;
+            top: 55px;
+            width: 380px;
+            background: #181818;
+            border-radius: 10px;
+            padding: 6px 0;
+            display: none;
+            z-index: 99999;
+            max-height: 260px;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .suggest-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 15px;
+            color: #fff;
+            transition: 0.2s;
+        }
+
+        .suggest-item:hover {
+            background: #282828;
         }
     </style>
 </head>
 
 <body>
-    <!-- TOP HEADER -->
+
+    <!-- TOP NAV HEADER -->
     <header class="header" id="mainHeader">
         <div class="header-left">
             <button class="icon-btn nav-btn" id="backBtn">‹</button>
             <button class="icon-btn nav-btn" id="forwardBtn">›</button>
 
             <img src="favicon.ico" class="logo" alt="Musicfy">
+
             <a href="index.html">
                 <img src="home.svg" class="home-icon" alt="Home" style="filter: invert(1);">
             </a>
         </div>
 
         <div class="header-center">
-            <input type="search" class="search" placeholder="What do you want to listen to?">
+            <input type="search" id="searchInput" class="search" placeholder="What do you want to listen to?">
+
+            <!-- ⭐ LIVE SEARCH SUGGESTION BOX ⭐ -->
+            <div id="suggestBox"></div>
         </div>
 
         <div class="header-right">
@@ -73,7 +102,8 @@
         </div>
     </header>
 
-    <!-- MOBILE SLIDE MENU -->
+
+    <!-- MOBILE MENU -->
     <nav id="mobileMenu" class="mobile-menu">
         <div class="mobile-menu-inner">
             <div class="mobile-menu-top">
@@ -82,7 +112,7 @@
             </div>
 
             <button class="mobile-link" onclick="location.href='index.html'">Home</button>
-            <button class="mobile-link" onclick="document.querySelector('.search').focus()">Search</button>
+            <button class="mobile-link">Search</button>
             <button class="mobile-link">Your Library</button>
             <button class="mobile-link" onclick="location.href='premium.html'">Premium</button>
 
@@ -93,12 +123,19 @@
         </div>
     </nav>
 
+
     <!-- MAIN LAYOUT -->
     <div class="layout">
         <aside class="sidebar" id="sidebar">
+
             <div class="your">
                 <span>Your Library</span>
                 <button class="add" id="addPlaylistBtn">+</button>
+            </div>
+
+            <div id="favouriteCard" class="fav-card" style="display:none;">
+                <img id="favImg" src="playlist.jpg" alt="Favourites">
+                <p id="favTitle">Favourites</p>
             </div>
 
             <div class="scroll">
@@ -131,6 +168,7 @@
             </div>
         </aside>
 
+
         <!-- MAIN CONTENT -->
         <main class="content">
 
@@ -157,6 +195,7 @@
         </main>
     </div>
 
+
     <!-- CREATE PLAYLIST POPUP -->
     <div id="createPlaylistPopup" class="popup" style="display:none;">
         <div class="popup-content">
@@ -167,7 +206,8 @@
         </div>
     </div>
 
-    <!-- MINI PLAYER -->
+
+    <!-- MINI PLAYER + FULLSCREEN PLAYER (unchanged) -->
     <div id="miniPlayer" class="mini-player">
         <img id="playerCover" class="player-cover" src="" alt="Cover">
 
@@ -178,16 +218,10 @@
 
         <div class="controls-main">
             <button id="prevBtn">⏮</button>
-
-            <!-- Play Button (Loader Added Dynamically) -->
-            <button id="playBtn">
-                ▶️
-            </button>
-
+            <button id="playBtn">▶️</button>
             <button id="nextBtn">⏭</button>
         </div>
 
-        <!-- TIME ROW -->
         <div class="time-row">
             <span id="currentTime">0:00</span>
             <input type="range" id="seekBar" value="0">
@@ -204,12 +238,10 @@
         <audio id="audio"></audio>
     </div>
 
-    <!-- FULLSCREEN PLAYER -->
     <div id="fullscreenPlayer" class="fullscreen-player">
         <button id="closeFullscreenBtn" class="icon-btn close-fs">✕</button>
 
         <img id="fsCover" class="fullscreen-cover" src="" alt="Cover">
-
         <div id="fsTitle" class="fs-title">Song Title</div>
         <div id="fsArtist" class="fs-artist">Artist</div>
 
@@ -222,7 +254,10 @@
         </div>
     </div>
 
-    <script src="index.js"></script>
-</body>
 
+    <!-- JS FILES -->
+    <script src="index.js"></script>
+    <script src="hindi.js"></script>
+
+</body>
 </html>

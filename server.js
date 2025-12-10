@@ -25,23 +25,44 @@ connectDB();
 // ------------------------------
 // Routes Import
 // ------------------------------
-const authRoutes = require("./routes/authRoutes");
 const musicRoutes = require("./routes/musicRoutes");
+const authRoutes = require("./routes/authRoutes");
 const premiumRoutes = require("./routes/premiumRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const playlistRoutes = require("./routes/playlistRoutes");
 const lyricsRoutes = require("./routes/lyricsRoutes");
+const userRoutes  = require("./routes/userRoutes.js");
+// ------------------------------
+// Route Mapping (Correct Order)
+// ------------------------------
+// ------------------------------
+// ROUTE MAPPING (DO NOT CHANGE ORDER)
+// ------------------------------
 
-// ------------------------------
-// Route Mapping
-// ------------------------------
-app.use("/api", authRoutes);                     // Auth + OTP + Login
-app.use("/api/music", musicRoutes);              // Jamendo + All Music APIs
-app.use("/api/music", playlistRoutes);           // Playlist routes
-app.use("/api/music", lyricsRoutes);             // Lyrics routes
-app.use("/api/premium", premiumRoutes);          // Premium check
-app.use("/api/payment", paymentRoutes);          // Razorpay payments
+// Auth → Login / Register
+app.use("/api", authRoutes);
+
+// Premium System
+app.use("/api/premium", premiumRoutes);
+
+// User Routes
+app.use("/api/user", userRoutes);
+
+// Music + Search + Hindi + English
+app.use("/api/music", musicRoutes);
+
+// Playlist Routes
+app.use("/api/music/playlist", playlistRoutes);
+
+// Lyrics
+app.use("/api/lyrics", lyricsRoutes);
+
+// Payment
+app.use("/api/payment", paymentRoutes);
+
+// Forgot Password
 app.use("/api/auth/forgot", require("./routes/forgot"));
+
 
 // ------------------------------
 // Default Route (API Test)
