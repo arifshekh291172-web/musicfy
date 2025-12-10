@@ -58,6 +58,23 @@
         .suggest-item:hover {
             background: #282828;
         }
+
+        /* -------------------------------
+           SETTINGS ICON STYLE
+        -------------------------------- */
+        .settings-btn {
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: white;
+            margin-left: 10px;
+            transition: 0.2s ease;
+        }
+        .settings-btn:hover {
+            transform: scale(1.2);
+            color: #1db954;
+        }
     </style>
 </head>
 
@@ -79,11 +96,12 @@
         <div class="header-center">
             <input type="search" id="searchInput" class="search" placeholder="What do you want to listen to?">
 
-            <!-- ⭐ LIVE SEARCH SUGGESTION BOX ⭐ -->
+            <!-- LIVE SEARCH SUGGESTION BOX -->
             <div id="suggestBox"></div>
         </div>
 
         <div class="header-right">
+
             <button class="premium-btn" onclick="location.href='premium.html'">Premium</button>
 
             <a href="register.html"><button id="signupBtn" class="ghost-btn">Signup</button></a>
@@ -95,6 +113,9 @@
             </div>
 
             <div id="premiumBadge" class="premium-badge" style="display:none;"></div>
+
+            <!-- ⭐ SETTINGS ICON ADDED HERE ⭐ -->
+            <button class="icon-btn settings-btn" id="settingsBtn" title="Settings">⚙️</button>
 
             <button class="icon-btn hamburger" id="menuToggle">
                 <span></span><span></span><span></span>
@@ -207,7 +228,7 @@
     </div>
 
 
-    <!-- MINI PLAYER + FULLSCREEN PLAYER (unchanged) -->
+    <!-- MINI PLAYER + FULLSCREEN PLAYER -->
     <div id="miniPlayer" class="mini-player">
         <img id="playerCover" class="player-cover" src="" alt="Cover">
 
@@ -254,10 +275,16 @@
         </div>
     </div>
 
-
     <!-- JS FILES -->
     <script src="index.js"></script>
     <script src="hindi.js"></script>
+
+    <!-- SETTINGS BUTTON CLICK EVENT -->
+    <script>
+        document.getElementById("settingsBtn").onclick = () => {
+            window.location.href = "settings.html";
+        };
+    </script>
 
 </body>
 </html>
