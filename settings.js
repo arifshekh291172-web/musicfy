@@ -1,6 +1,21 @@
+// -------------------------------------
+// GLOBAL CONFIG
+// -------------------------------------
+const BACKEND = "https://musicfy-jkhs.onrender.com";
 const token = localStorage.getItem("musicfy_token");
 
-// -------------- ON LOAD --------------
+// UNIVERSAL API WRAPPER (MAIN FIX)
+const API = (path, options = {}) => {
+    const url = path.startsWith("/")
+        ? `${BACKEND}${path}`
+        : `${BACKEND}/${path}`;
+
+    return fetch(url, options);
+};
+
+// -------------------------------------
+// ON LOAD
+// -------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
     attachGenreListeners();
     attachCrossfadeListener();
@@ -15,27 +30,25 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSecurityInfo();
 });
 
-// -------------- PROFILE --------------
+// -------------------------------------
+// PROFILE
+// -------------------------------------
 async function loadUserDetails() {
     try {
-        const res = await fetch("/api/user/me", {
+        const res = await API("/api/user/me", {
             headers: { Authorization: token }
         });
-        const data = await res.json();
 
-        if (!res.ok) {
-            console.error(data);
-            return;
-        }
+        const data = await res.json();
+        if (!res.ok) return console.error(data);
 
         document.getElementById("username").value = data.username || "";
         document.getElementById("email").value = data.email || "";
         document.getElementById("dob").value = data.dob ? data.dob.substring(0, 10) : "";
         document.getElementById("gender").value = data.gender || "";
         document.getElementById("privacyToggle").checked = !!data.isPrivate;
-        if (data.photo) {
-            document.getElementById("profileImage").src = data.photo;
-        }
+
+        if (data.photo) document.getElementById("profileImage").src = data.photo;
     } catch (err) {
         console.error("Error loading user details", err);
     }
@@ -45,27 +58,24 @@ document.getElementById("uploadPhoto").addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Preview
+    // Preview image
     const reader = new FileReader();
-    reader.onload = function (ev) {
-        document.getElementById("profileImage").src = ev.target.result;
-    };
+    reader.onload = ev => document.getElementById("profileImage").src = ev.target.result;
     reader.readAsDataURL(file);
 
-    // Upload to backend
+    // Upload
     const formData = new FormData();
     formData.append("photo", file);
 
     try {
-        const res = await fetch("/api/user/upload-photo", {
+        const res = await API("/api/user/upload-photo", {
             method: "POST",
             headers: { Authorization: token },
             body: formData
         });
+
         const data = await res.json();
-        if (!res.ok) {
-            alert(data.message || "Error uploading photo");
-        }
+        if (!res.ok) alert(data.message || "Error uploading photo");
     } catch (err) {
         console.error("Upload photo error", err);
     }
@@ -81,7 +91,7 @@ async function saveProfile() {
     };
 
     try {
-        const res = await fetch("/api/user/update-profile", {
+        const res = await API("/api/user/update-profile", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -89,6 +99,7 @@ async function saveProfile() {
             },
             body: JSON.stringify(body)
         });
+
         const data = await res.json();
         alert(data.message || (res.ok ? "Profile updated" : "Error updating profile"));
     } catch (err) {
@@ -96,18 +107,17 @@ async function saveProfile() {
     }
 }
 
-// -------------- SECURITY --------------
+// -------------------------------------
+// SECURITY
+// -------------------------------------
 async function changePassword() {
     const oldPass = document.getElementById("oldPass").value;
     const newPass = document.getElementById("newPass").value;
 
-    if (!oldPass || !newPass) {
-        alert("Please enter both current and new password.");
-        return;
-    }
+    if (!oldPass || !newPass) return alert("Please enter both passwords.");
 
     try {
-        const res = await fetch("/api/user/change-password", {
+        const res = await API("/api/user/change-password", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -125,17 +135,17 @@ async function changePassword() {
 
 async function loadSecurityInfo() {
     try {
-        const res = await fetch("/api/user/security-info", {
+        const res = await API("/api/user/security-info", {
             headers: { Authorization: token }
         });
+
         const data = await res.json();
         if (!res.ok) return;
 
         document.getElementById("twoFAToggle").checked = !!data.twoFAEnabled;
-        if (data.lastLogin) {
+        if (data.lastLogin)
             document.getElementById("lastLoginText").textContent =
                 "Last login: " + new Date(data.lastLogin).toLocaleString();
-        }
     } catch (err) {
         console.error("Error loading security info", err);
     }
@@ -143,8 +153,9 @@ async function loadSecurityInfo() {
 
 async function toggleTwoFA() {
     const enabled = document.getElementById("twoFAToggle").checked;
+
     try {
-        const res = await fetch("/api/user/twofa", {
+        const res = await API("/api/user/twofa", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -152,27 +163,25 @@ async function toggleTwoFA() {
             },
             body: JSON.stringify({ enabled })
         });
+
         const data = await res.json();
-        if (!res.ok) {
-            alert(data.message || "Error updating 2FA");
-        }
+        if (!res.ok) alert(data.message || "Error updating 2FA");
     } catch (err) {
         console.error("2FA error", err);
     }
 }
 
-// -------------- SUBSCRIPTION --------------
+// -------------------------------------
+// SUBSCRIPTION
+// -------------------------------------
 async function loadPremiumStatus() {
     try {
-        const res = await fetch("/api/premium/check", {
+        const res = await API("/api/premium/check", {
             headers: { Authorization: token }
         });
-        const data = await res.json();
 
-        if (!res.ok) {
-            console.error(data);
-            return;
-        }
+        const data = await res.json();
+        if (!res.ok) return;
 
         document.getElementById("premiumStatus").innerText =
             data.isPremium ? "Premium: Active" : "Plan: Free";
@@ -184,14 +193,15 @@ async function loadPremiumStatus() {
 
         document.getElementById("autoRenewToggle").checked = !!data.autoRenew;
     } catch (err) {
-        console.error("Error loading premium status", err);
+        console.error("Premium load error", err);
     }
 }
 
 async function toggleAutoRenew() {
     const autoRenew = document.getElementById("autoRenewToggle").checked;
+
     try {
-        const res = await fetch("/api/premium/auto-renew", {
+        const res = await API("/api/premium/auto-renew", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -199,10 +209,9 @@ async function toggleAutoRenew() {
             },
             body: JSON.stringify({ autoRenew })
         });
+
         const data = await res.json();
-        if (!res.ok) {
-            alert(data.message || "Error updating auto-renew");
-        }
+        if (!res.ok) alert(data.message || "Error updating auto-renew");
     } catch (err) {
         console.error("Auto-renew error", err);
     }
@@ -210,12 +219,10 @@ async function toggleAutoRenew() {
 
 async function redeemCoupon() {
     const code = document.getElementById("couponCode").value.trim();
-    if (!code) {
-        alert("Enter a coupon code.");
-        return;
-    }
+    if (!code) return alert("Enter coupon code.");
+
     try {
-        const res = await fetch("/api/premium/redeem", {
+        const res = await API("/api/premium/redeem", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -223,51 +230,45 @@ async function redeemCoupon() {
             },
             body: JSON.stringify({ code })
         });
+
         const data = await res.json();
-        alert(data.message || (res.ok ? "Coupon applied" : "Error applying coupon"));
-        if (res.ok) {
-            loadPremiumStatus();
-        }
+        alert(data.message || (res.ok ? "Coupon applied" : "Invalid coupon"));
+        if (res.ok) loadPremiumStatus();
     } catch (err) {
-        console.error("Redeem coupon error", err);
+        console.error("Redeem error", err);
     }
 }
 
-function upgradePremium() {
-    window.location.href = "/premium.html";
-}
-
-// -------------- MUSIC PREFERENCES --------------
+// -------------------------------------
+// MUSIC PREFERENCES
+// -------------------------------------
 function attachGenreListeners() {
     document.querySelectorAll(".chip").forEach(chip => {
-        chip.addEventListener("click", () => {
-            chip.classList.toggle("active");
-        });
+        chip.addEventListener("click", () => chip.classList.toggle("active"));
     });
 }
 
 function attachCrossfadeListener() {
-    const crossSlider = document.getElementById("crossfadeSlider");
-    if (!crossSlider) return;
-    crossSlider.addEventListener("input", () => {
-        document.getElementById("crossValue").textContent = crossSlider.value + "s";
+    const slider = document.getElementById("crossfadeSlider");
+    if (!slider) return;
+
+    slider.addEventListener("input", () => {
+        document.getElementById("crossValue").textContent = slider.value + "s";
     });
 }
 
 async function loadPreferences() {
     try {
-        const res = await fetch("/api/user/preferences", {
+        const res = await API("/api/user/preferences", {
             headers: { Authorization: token }
         });
+
         const data = await res.json();
         if (!res.ok) return;
 
-        // Genres
         if (Array.isArray(data.genres)) {
             document.querySelectorAll(".chip").forEach(chip => {
-                if (data.genres.includes(chip.textContent)) {
-                    chip.classList.add("active");
-                }
+                if (data.genres.includes(chip.textContent)) chip.classList.add("active");
             });
         }
 
@@ -275,29 +276,25 @@ async function loadPreferences() {
         document.getElementById("playQuality").value = data.playQuality || "auto";
         document.getElementById("downloadQuality").value = data.downloadQuality || "medium";
 
-        const crossSlider = document.getElementById("crossfadeSlider");
-        if (typeof data.crossfade === "number") {
-            crossSlider.value = data.crossfade;
-            document.getElementById("crossValue").textContent = data.crossfade + "s";
-        }
+        const slider = document.getElementById("crossfadeSlider");
+        slider.value = data.crossfade || 0;
+        document.getElementById("crossValue").textContent = data.crossfade + "s";
 
         document.getElementById("gaplessToggle").checked = !!data.gapless;
         document.getElementById("autoplayToggle").checked = !!data.autoplay;
         document.getElementById("dataSaverToggle").checked = !!data.dataSaver;
         document.getElementById("animationToggle").checked = data.animations !== false;
     } catch (err) {
-        console.error("Error loading preferences", err);
+        console.error("Preferences load error", err);
     }
 }
 
 async function saveMusicPreferences() {
     const genres = [];
-    document.querySelectorAll(".chip.active").forEach(chip => {
-        genres.push(chip.textContent);
-    });
+    document.querySelectorAll(".chip.active").forEach(c => genres.push(c.textContent));
 
     const body = {
-        genres: genres,
+        genres,
         blockExplicit: document.getElementById("explicitToggle").checked,
         playQuality: document.getElementById("playQuality").value,
         downloadQuality: document.getElementById("downloadQuality").value,
@@ -309,7 +306,7 @@ async function saveMusicPreferences() {
     };
 
     try {
-        const res = await fetch("/api/user/preferences", {
+        const res = await API("/api/user/preferences", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -317,18 +314,20 @@ async function saveMusicPreferences() {
             },
             body: JSON.stringify(body)
         });
+
         const data = await res.json();
-        alert(data.message || (res.ok ? "Preferences saved" : "Error saving preferences"));
+        alert(data.message || (res.ok ? "Preferences saved" : ""));
     } catch (err) {
-        console.error("Save preferences error", err);
+        console.error("Preferences save error", err);
     }
 }
 
-// -------------- THEME & ACCENT --------------
+// -------------------------------------
+// THEME & ACCENT
+// -------------------------------------
 function loadTheme() {
     const saved = localStorage.getItem("theme") || "system";
-    const select = document.getElementById("themeSelect");
-    if (select) select.value = saved;
+    document.getElementById("themeSelect").value = saved;
     applyTheme(saved);
 }
 
@@ -339,21 +338,20 @@ function setTheme() {
 }
 
 function applyTheme(theme) {
+    const root = document.documentElement;
     if (theme === "dark") {
-        document.documentElement.style.setProperty("--bg-main", "#000000");
-        document.documentElement.style.setProperty("--bg-card", "#111111");
+        root.style.setProperty("--bg-main", "#000");
+        root.style.setProperty("--bg-card", "#111");
     } else if (theme === "light") {
-        document.documentElement.style.setProperty("--bg-main", "#f9fafb");
-        document.documentElement.style.setProperty("--bg-card", "#ffffff");
+        root.style.setProperty("--bg-main", "#f9fafb");
+        root.style.setProperty("--bg-card", "#fff");
     } else if (theme === "oled") {
-        document.documentElement.style.setProperty("--bg-main", "#000000");
-        document.documentElement.style.setProperty("--bg-card", "#050505");
+        root.style.setProperty("--bg-main", "#000");
+        root.style.setProperty("--bg-card", "#050505");
     } else {
-        // system
-        const prefersDark = window.matchMedia &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.style.setProperty("--bg-main", prefersDark ? "#000000" : "#f9fafb");
-        document.documentElement.style.setProperty("--bg-card", prefersDark ? "#111111" : "#ffffff");
+        const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        root.style.setProperty("--bg-main", dark ? "#000" : "#f9fafb");
+        root.style.setProperty("--bg-card", dark ? "#111" : "#fff");
     }
 }
 
@@ -365,36 +363,28 @@ function setAccentColor() {
 
 function loadAccentFromStorage() {
     const saved = localStorage.getItem("accentColor");
-    if (saved) {
-        document.documentElement.style.setProperty("--accent-color", saved);
-        const select = document.getElementById("accentSelect");
-        if (select) select.value = saved;
-    }
+    if (!saved) return;
+
+    document.documentElement.style.setProperty("--accent-color", saved);
+    document.getElementById("accentSelect").value = saved;
 }
 
-function clearCache() {
-    // Basic local cache clear (you can add more keys)
-    localStorage.removeItem("musicfy_cache");
-    alert("App cache cleared (local data).");
-}
-
-// -------------- REGIONAL SETTINGS --------------
+// -------------------------------------
+// REGIONAL SETTINGS
+// -------------------------------------
 async function loadRegionalSettings() {
     try {
-        const res = await fetch("/api/user/regional", {
+        const res = await API("/api/user/regional", {
             headers: { Authorization: token }
         });
+
         const data = await res.json();
         if (!res.ok) return;
 
-        if (data.language) {
-            document.getElementById("langSelect").value = data.language;
-        }
-        if (data.country) {
-            document.getElementById("countrySelect").value = data.country;
-        }
+        document.getElementById("langSelect").value = data.language || "en";
+        document.getElementById("countrySelect").value = data.country || "India";
     } catch (err) {
-        console.error("Error loading regional settings", err);
+        console.error("Regional load error", err);
     }
 }
 
@@ -405,7 +395,7 @@ async function saveRegionalSettings() {
     };
 
     try {
-        const res = await fetch("/api/user/regional", {
+        const res = await API("/api/user/regional", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -413,24 +403,29 @@ async function saveRegionalSettings() {
             },
             body: JSON.stringify(body)
         });
+
         const data = await res.json();
-        alert(data.message || (res.ok ? "Regional settings saved" : "Error saving regional settings"));
+        alert(data.message || "Regional settings saved");
     } catch (err) {
-        console.error("Save regional error", err);
+        console.error("Regional save error", err);
     }
 }
 
-// -------------- NOTIFICATIONS --------------
+// -------------------------------------
+// NOTIFICATIONS
+// -------------------------------------
 function loadNotificationSettings() {
-    const master = localStorage.getItem("notify_master") === "true";
-    const newRel = localStorage.getItem("notify_new") === "true";
-    const playlist = localStorage.getItem("notify_playlist") === "true";
-    const offers = localStorage.getItem("notify_offers") === "true";
+    document.getElementById("notifyMasterToggle").checked =
+        localStorage.getItem("notify_master") === "true";
 
-    document.getElementById("notifyMasterToggle").checked = master;
-    document.getElementById("notifyNewToggle").checked = newRel;
-    document.getElementById("notifyPlaylistToggle").checked = playlist;
-    document.getElementById("notifyOffersToggle").checked = offers;
+    document.getElementById("notifyNewToggle").checked =
+        localStorage.getItem("notify_new") === "true";
+
+    document.getElementById("notifyPlaylistToggle").checked =
+        localStorage.getItem("notify_playlist") === "true";
+
+    document.getElementById("notifyOffersToggle").checked =
+        localStorage.getItem("notify_offers") === "true";
 }
 
 function toggleMasterNotifications() {
@@ -443,46 +438,48 @@ function toggleMasterNotifications() {
 }
 
 function saveNotificationSettings() {
-    const master = document.getElementById("notifyMasterToggle").checked;
-    const newRel = document.getElementById("notifyNewToggle").checked;
-    const playlist = document.getElementById("notifyPlaylistToggle").checked;
-    const offers = document.getElementById("notifyOffersToggle").checked;
-
-    localStorage.setItem("notify_master", master);
-    localStorage.setItem("notify_new", newRel);
-    localStorage.setItem("notify_playlist", playlist);
-    localStorage.setItem("notify_offers", offers);
+    localStorage.setItem("notify_master", document.getElementById("notifyMasterToggle").checked);
+    localStorage.setItem("notify_new", document.getElementById("notifyNewToggle").checked);
+    localStorage.setItem("notify_playlist", document.getElementById("notifyPlaylistToggle").checked);
+    localStorage.setItem("notify_offers", document.getElementById("notifyOffersToggle").checked);
 
     alert("Notification settings saved.");
 }
 
-// -------------- DEVICES --------------
+// -------------------------------------
+// DEVICES
+// -------------------------------------
 async function loadDevices() {
     try {
-        const res = await fetch("/api/user/devices", {
+        const res = await API("/api/user/devices", {
             headers: { Authorization: token }
         });
+
         const data = await res.json();
         if (!res.ok) return;
 
         const list = document.getElementById("deviceList");
         list.innerHTML = "";
+
         (data.devices || []).forEach(d => {
             const li = document.createElement("li");
             li.innerHTML = `
-                <span>${d.name || "Device"}<br><span style="color:#9ca3af;font-size:11px;">Last active: ${d.lastActive ? new Date(d.lastActive).toLocaleString() : "Unknown"}</span></span>
+                <span>${d.name || "Device"}<br>
+                <span style="color:#9ca3af;font-size:11px;">
+                    Last active: ${d.lastActive ? new Date(d.lastActive).toLocaleString() : "Unknown"}
+                </span></span>
                 <button class="btn small" onclick="logoutDevice('${d.id}')">Logout</button>
             `;
             list.appendChild(li);
         });
     } catch (err) {
-        console.error("Error loading devices", err);
+        console.error("Device load error", err);
     }
 }
 
 async function logoutDevice(deviceId) {
     try {
-        const res = await fetch("/api/user/devices/logout", {
+        const res = await API("/api/user/devices/logout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -490,15 +487,18 @@ async function logoutDevice(deviceId) {
             },
             body: JSON.stringify({ deviceId })
         });
+
         const data = await res.json();
-        alert(data.message || (res.ok ? "Device logged out" : "Error logging out device"));
+        alert(data.message || "Device logged out");
         if (res.ok) loadDevices();
     } catch (err) {
-        console.error("Logout device error", err);
+        console.error("Device logout error", err);
     }
 }
 
-// -------------- SUPPORT --------------
+// -------------------------------------
+// SUPPORT
+// -------------------------------------
 function openTicket() {
     window.location.href = "/support/ticket.html";
 }
@@ -511,7 +511,9 @@ function openReport() {
     window.location.href = "/support/report.html";
 }
 
-// -------------- LOGOUT --------------
+// -------------------------------------
+// LOGOUT
+// -------------------------------------
 function logout() {
     localStorage.removeItem("musicfy_token");
     window.location.href = "/login.html";
